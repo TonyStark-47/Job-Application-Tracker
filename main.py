@@ -13,6 +13,11 @@ from datetime import datetime
 
 from flask_apscheduler import APScheduler
 
+import json
+import re
+
+from agent import get_response
+
 
 import os
 import dotenv
@@ -281,6 +286,53 @@ def show_all_job_application():
     jobs = db.session.execute(db.select(JobDetails)).scalars().all()
     return render_template('index.html', jobs=jobs)
 
+
+@app.route('/save_data', methods=["GET", "POST"])
+def save_data():
+    data = request.json
+    print("Received data:", data)
+    prompt = f"""I am giving you the extracted text from a job site. 
+    Your job is to extract the details from the text and return it in a json format.
+    The details must include the job title('job_title'), company('company'), status('status', possible values: ('Applied', 'Interviewed', 'Rejected', 'Offered', 'Awaiting Interview', '(if nothig matched then put by yourself, like if it is Hiring Challenge)')), job location('location), date of apply
+    (or) date of interview (or) date of test('date', fomat: yyyy-mm-dd) and link to the job('link').
+    IF YOU DON'T FOUND ANY DATE THEN PUT TODAY'S DATE, IF NOT LINK PUT SAMLE LINK, DON'T OUTPUT ANY NONE VALUE.
+    USE SHORT LOCATION NAME(usually one to two word).
+    RETURN THE DATA IN PURE JSON FORMAT. IF THERE ARE MANY JOBS, RETURNS ONLY THAT I APPLIED FOR.
+    Here is the data: {data}
+    """
+   
+    job_details_raw = get_response(prompt)
+    print(job_details_raw)
+
+    # Try to extract JSON object from the raw string
+    match = re.search(r'\{.*\}', job_details_raw, re.DOTALL)
+
+    if match:
+        json_str = match.group(0)
+        job_details = json.loads(json_str)
+        print(job_details)  # Clean Python dict
+    else:
+        print("No valid JSON object found.") 
+  
+   
+    # try:
+    new_job_details = JobDetails(
+        user_id=1,
+        job_title=job_details["job_title"],
+        company=job_details["company"],
+        status=job_details["status"],
+        location=job_details["location"],
+        date=job_details["date"],
+        link=job_details["link"]
+    )
+    # except Exception as e:
+    #     print(f"Error parsing job details: {e}\n Users already exists")
+    #     return jsonify({"status": "error", "message": "Failed to parse job details"}), 400
+
+    db.session.add(new_job_details)
+    db.session.commit()
+    # return redirect(url_for('home'))
+    return jsonify({"status": "success", "recieved": data, "job_details": job_details})
 
 
 def send_email(message, to_email):
