@@ -7,7 +7,7 @@ Flask_WTF==1.2.1
 WTForms==3.0.1
 Flask-APScheduler
 python-dotenv
-google-generativeai
+google-genai
 Flask_CKEditor==0.5.1
 Werkzeug==3.0.0
 email_validator
