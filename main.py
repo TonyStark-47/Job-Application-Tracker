@@ -291,14 +291,33 @@ def show_all_job_application():
 def save_data():
     data = request.json
     print("Received data:", data)
-    prompt = f"""I am giving you the extracted text from a job site. 
-    Your job is to extract the details from the text and return it in a json format.
-    The details must include the job title('job_title'), company('company'), status('status', possible values: ('Applied', 'Interviewed', 'Rejected', 'Offered', 'Awaiting Interview', '(if nothig matched then put by yourself, like if it is Hiring Challenge)')), job location('location), date of apply
-    (or) date of interview (or) date of test('date', fomat: yyyy-mm-dd) and link to the job('link').
-    IF YOU DON'T FOUND ANY DATE THEN PUT TODAY'S DATE, IF NOT LINK PUT SAMLE LINK, DON'T OUTPUT ANY NONE VALUE.
-    USE SHORT LOCATION NAME(usually one to two word).
-    RETURN THE DATA IN PURE JSON FORMAT. IF THERE ARE MANY JOBS, RETURNS ONLY THAT I APPLIED FOR.
-    Here is the data: {data}
+
+    today_date = datetime.today().strftime('%Y-%m-%d')
+
+    prompt = f"""
+    You are an intelligent job data extractor.
+
+    I will provide you with raw extracted text from a job portal. Your task is to parse the text and extract job-related information. 
+    Your response must be in **pure JSON format** with the following keys:
+
+    - "job_title" (str): Title of the job role  
+    - "company" (str): Name of the company  
+    - "status" (str): Application status. Choose from the following:
+    - "Applied", "Interviewed", "Rejected", "Offered", "Awaiting Interview"
+    - If no exact match, return a best-guess such as "Hiring Challenge"
+    - "location" (str): Use short, city-level names (1–2 words only)
+    - "date" (str): Date of apply/test/interview in `YYYY-MM-DD` format  
+    - If no date is found in the text, use today’s date: "{today_date}"
+    - "link" (str): Link to the job posting  
+    - If not found, use a placeholder like `"https://sample-job-link.com"`
+
+    Additional Instructions:
+    - Do **not** include any keys with `null`, `None`, or empty values.
+    - If multiple jobs are present in the text, return only the one(s) I have applied for.
+    - Output must be in **valid JSON** and nothing else — no explanations, no extra text.
+
+    Here is the extracted data:
+    {data}
     """
    
     job_details_raw = get_response(prompt)
