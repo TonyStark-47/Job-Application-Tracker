@@ -50,7 +50,8 @@ class Base(DeclarativeBase):
     pass
 
 
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DB_URI', "sqlite:///blog.db")
+# here I used external Postgresql URL(from another account) 
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DB_URI', "sqlite:///job.db")
 db = SQLAlchemy(model_class=Base)
 db.init_app(app)
 
