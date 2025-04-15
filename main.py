@@ -146,6 +146,25 @@ def login():
     return render_template('login.html', form=form)
 
 
+# for extension
+@app.route('/login_through_extension', methods=['GET', 'POST'])
+def login_on_extension():
+    data = request.get_json()
+
+    if not data or not data.get('email') or not data.get('password'):
+        return jsonify({"error": "Missing email or password"}), 400
+
+    user = db.session.execute(db.select(User).where(User.email == data['email'])).scalar()
+
+    if user:
+        if user.password == data['password']:
+            return jsonify({"user_id": user.id}), 200
+        else:
+            return jsonify({"error": "Invalid login credentials"}), 401
+    else:
+        return jsonify({"error": "User does not exist"}), 401
+
+
 @app.route('/logout')
 @loggedin
 def logout():
@@ -284,13 +303,13 @@ def get_verify_otp():
 
 @app.route('/secret/hehehe')
 def show_all_job_application():
-    jobs = db.session.execute(db.select(JobDetails)).scalars().all()
+    jobs = db.session.execute(db.select(User)).scalars().all()
     return render_template('index.html', jobs=jobs)
 
 
 @app.route('/save_data', methods=["GET", "POST"])
 def save_data():
-    data = request.json
+    data = request.get_json()
     print("Received data:", data)
 
     today_date = datetime.today().strftime('%Y-%m-%d')
@@ -335,9 +354,8 @@ def save_data():
         print("No valid JSON object found.") 
   
    
-    # try:
     new_job_details = JobDetails(
-        user_id=1,
+        user_id=data['user_id'],
         job_title=job_details["job_title"],
         company=job_details["company"],
         status=job_details["status"],
@@ -345,13 +363,9 @@ def save_data():
         date=job_details["date"],
         link=job_details["link"]
     )
-    # except Exception as e:
-    #     print(f"Error parsing job details: {e}\n Users already exists")
-    #     return jsonify({"status": "error", "message": "Failed to parse job details"}), 400
 
     db.session.add(new_job_details)
     db.session.commit()
-    # return redirect(url_for('home'))
     return jsonify({"status": "success", "recieved": data, "job_details": job_details})
 
 
