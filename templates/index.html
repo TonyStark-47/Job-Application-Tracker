@@ -41,7 +41,12 @@
     </div>
 </div>
 <div class="text-center">
-    <a class="btn btn-primary" href="{{ url_for('add_application') }}">Add Job Application</a>
+    {% if current_user.is_authenticated %}
+        <a class="btn btn-primary" href="{{ url_for('add_application') }}">Add Job Application</a>
+    {% else: %}
+        <a class="btn btn-primary" href="{{ url_for('register') }}">Add Job Application</a>
+    {% endif %}
+
 </div>
 
 {% include "footer.html" %}
