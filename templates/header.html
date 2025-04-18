@@ -5,26 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0 shrink-to-fit=no">
     <title>Job Application Tracker</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
-    <style>
-        body {
-            background-color: #f8f9fa;
-        }
-        .tracker-table th, .tracker-table td {
-            vertical-align: middle;
-        }
-        .status-badge {
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 0.9rem;
-        }
-        .awaiting { background-color: #ffcc00; color: black; }
-        .interviewed { background-color: #ff8800; color: white; }
-        .applied { background-color: #007bff; color: white; }
-        .offered { background-color: #28a745; color: white; }
-        .withdrawn { background-color: #6c757d; color: white; }
-        .rejected { background-color: #dc3545; color: white; }
-    </style>
     {% block styles %}
     <!-- Bootstrap CSS -->
     {{ bootstrap.load_css() }}
@@ -40,8 +22,12 @@
       
               <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
                 <li><a href="{{ url_for('home') }}" class="nav-link px-2 text-warning fw-bolder ">Home</a></li>
-                <li><a href="#" class="nav-link px-2 text-white">Features</a></li>
-                <li><a href="#" class="nav-link px-2 text-white">Pricing</a></li>
+                <li>
+                  <a href="{{ url_for('get_extension') }}"
+                     class="nav-link px-2 bg-gradient text-white fw-bold rounded shadow-sm">
+                     🧩 Extension
+                  </a>
+                </li>
                 <li><a href="#" class="nav-link px-2 text-white">FAQs</a></li>
                 <li><a href="#" class="nav-link px-2 text-white">About</a></li>
               </ul>

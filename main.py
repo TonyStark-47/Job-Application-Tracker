@@ -269,6 +269,11 @@ def search():
     return render_template('index.html', jobs=result)
 
 
+@app.route('/extension', methods=['GET', 'POST'])
+def get_extension():
+    return render_template('extension.html')
+
+
 @app.route('/otp', methods=['GET', 'POST'])
 def get_verify_otp():
     form = OTPForm()

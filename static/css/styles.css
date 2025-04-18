@@ -1,0 +1,19 @@
+body {
+    background-color: #f8f9fa;
+}
+.tracker-table th, .tracker-table td {
+    vertical-align: middle;
+}
+.status-badge {
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.9rem;
+}
+.awaiting { background-color: #ffcc00; color: black; }
+.interviewed { background-color: #ff8800; color: white; }
+.applied { background-color: #007bff; color: white; }
+.offered { background-color: #28a745; color: white; }
+.withdrawn { background-color: #6c757d; color: white; }
+.rejected { background-color: #dc3545; color: white; }
+.test { background-color: #6610f2; color: white; }
+.hiring-challenge { background-color: #6610f2; color: white; }
