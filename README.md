@@ -1,4 +1,5 @@
 # 💼 Job Application Tracker ![Python](https://img.shields.io/badge/Python-3.10+-blue) ![Flask](https://img.shields.io/badge/Flask-2.2+-green) ![MIT License](https://img.shields.io/badge/License-MIT-yellow) ![Status](https://img.shields.io/badge/Status-Completed-brightgreen)
+[![Ask DeepWiki](https://deepwiki.com/badge.svg)](https://deepwiki.com/TonyStark-47/Job-Application-Tracker)
 
 > A full-stack job application tracker powered by Flask, AI, and browser automation.
 
